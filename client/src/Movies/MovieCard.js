@@ -13,15 +13,11 @@ const MovieCard = props => {
 			</div>
 			<h3>Actors</h3>
 
-			{stars.isArray ? (
-				stars.map(star => (
-					<div key={star} className='movie-star'>
-						{star}
-					</div>
-				))
-			) : (
-				<div className='movie-star'>{stars}</div>
-			)}
+			{stars.map(star => (
+				<div key={star} className='movie-star'>
+					{star}
+				</div>
+			))}
 		</div>
 	);
 };

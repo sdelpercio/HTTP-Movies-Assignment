@@ -33,34 +33,22 @@ const UpdateMovie = props => {
 	const handleSubmit = e => {
 		e.preventDefault();
 		console.log('before edit', editMovie);
-		if (typeof editMovie.stars === 'string') {
-			const starArray = editMovie.stars.split(',');
 
-			console.log('here is star array', starArray);
+		const editedMovie = editMovie;
 
-			setEditMovie({
-				...editMovie,
-				stars: starArray
-			});
+		const starArray = editedMovie.stars.split(',');
 
-			console.log('after edit', editMovie);
+		editedMovie.stars = starArray;
 
-			axios
-				.put(`http://localhost:5000/api/movies/${id}`, editMovie)
-				.then(res => {
-					setEditMovie(initialMovie);
-					history.push('/');
-				})
-				.catch(err => console.log('put error', err));
-		} else {
-			axios
-				.put(`http://localhost:5000/api/movies/${id}`, editMovie)
-				.then(res => {
-					setEditMovie(initialMovie);
-					history.push('/');
-				})
-				.catch(err => console.log('put error', err));
-		}
+		console.log('after edit', editedMovie);
+
+		axios
+			.put(`http://localhost:5000/api/movies/${id}`, editedMovie)
+			.then(res => {
+				setEditMovie(initialMovie);
+				history.push('/');
+			})
+			.catch(err => console.log('put error', err));
 	};
 
 	return (
