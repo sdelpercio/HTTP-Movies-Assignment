@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 const UpdateMovie = props => {
@@ -7,11 +7,12 @@ const UpdateMovie = props => {
 		title: '',
 		director: '',
 		metascore: 0,
-		stars: ''
+		stars: ['']
 	};
 
 	const [editMovie, setEditMovie] = useState(initialMovie);
 	const { id } = useParams();
+	const history = useHistory();
 
 	useEffect(() => {
 		axios
@@ -29,10 +30,43 @@ const UpdateMovie = props => {
 		});
 	};
 
+	const handleSubmit = e => {
+		e.preventDefault();
+		console.log('before edit', editMovie);
+		if (typeof editMovie.stars === 'string') {
+			const starArray = editMovie.stars.split(',');
+
+			console.log('here is star array', starArray);
+
+			setEditMovie({
+				...editMovie,
+				stars: starArray
+			});
+
+			console.log('after edit', editMovie);
+
+			axios
+				.put(`http://localhost:5000/api/movies/${id}`, editMovie)
+				.then(res => {
+					setEditMovie(initialMovie);
+					history.push('/');
+				})
+				.catch(err => console.log('put error', err));
+		} else {
+			axios
+				.put(`http://localhost:5000/api/movies/${id}`, editMovie)
+				.then(res => {
+					setEditMovie(initialMovie);
+					history.push('/');
+				})
+				.catch(err => console.log('put error', err));
+		}
+	};
+
 	return (
 		<div className='movie-card'>
 			<h2>Update Movie</h2>
-			<form className='movie-form'>
+			<form className='movie-form' onSubmit={handleSubmit}>
 				<input
 					type='text'
 					name='title'
@@ -58,7 +92,7 @@ const UpdateMovie = props => {
 					required
 				/>
 				<input
-					type='textarea'
+					type='text'
 					name='stars'
 					value={editMovie.stars}
 					onChange={handleChange}
